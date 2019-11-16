@@ -89,6 +89,7 @@ define prometheus::daemon (
   Stdlib::Host $scrape_host            = $facts['fqdn'],
   Optional[Stdlib::Port] $scrape_port  = undef,
   String[1] $scrape_job_name           = $name,
+  Hash $scrape_job_labels              = { 'alias' => $scrape_host },
   Stdlib::Absolutepath $usershell      = $prometheus::usershell,
 ) {
 
@@ -269,7 +270,7 @@ define prometheus::daemon (
     @@prometheus::scrape_job { "${scrape_host}:${scrape_port}":
       job_name => $scrape_job_name,
       targets  => ["${scrape_host}:${scrape_port}"],
-      labels   => { 'alias' => $scrape_host },
+      labels   => $scrape_job_labels,
     }
   }
 }
